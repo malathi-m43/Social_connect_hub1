@@ -1,6 +1,49 @@
 import datetime
 import math
 import os
+from flask import Flask, request, jsonify
+import sqlite3
+
+app = Flask(__name__)
+
+# --- Database Setup ---
+def init_db():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS todos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            task TEXT NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+init_db()
+
+# --- Routes ---
+@app.route("/")
+def home():
+    return "Hello from Social Connect Hub with SQLite!"
+
+@app.route("/todos", methods=["GET"])
+def get_todos():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM todos")
+    rows = cursor.fetchall()
+    conn.close()
+    return jsonify(rows)
+
+@app.route("/todos", methods=["POST"])
+def add_todo():
+    task = request.json.get("task")
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO todos (task) VALUES (?)", (task,))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Todo added successfully!"})
 
 
 import sqlite3
