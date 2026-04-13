@@ -1,6 +1,8 @@
 import datetime
 import math
 import os
+
+
 import sqlite3
 from flask import Flask, jsonify, redirect, request, send_from_directory, session, g
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -226,7 +228,9 @@ def logout_user():
     session.pop('instagram_user', None)
     return jsonify({'message': 'Logout successful.'})
 
-
+@app.route("/")
+def home():
+    return "Hello from Social Connect Hub!"
 @app.route('/api/current-user', methods=['GET'])
 def current_user():
     user = session.get('user')
