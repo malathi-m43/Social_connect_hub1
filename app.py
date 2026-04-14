@@ -555,7 +555,11 @@ def serve_frontend(path):
         return send_from_directory(JS_DIR, path)
 
     return send_from_directory(FRONTEND_DIR, 'index.html')
+from app import app
 
+# Vercel Python runtime detects the Flask app object exported here.
+# Also export the common WSGI variable for compatibility.
+application = app
 
 if __name__ == '__main__':
     init_db()
