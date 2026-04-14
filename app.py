@@ -5,6 +5,9 @@ from flask import Flask, request, jsonify
 import sqlite3
 
 app = Flask(__name__)
+@app.route("/")
+def home():
+    return "Hello, world!"
 
 # --- Database Setup ---
 def init_db():
